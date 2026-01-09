@@ -25,7 +25,9 @@ PRIVILEGE ESCALATION:
 	sudo -l
 	(env || set) 2>/dev/null
 	ls -la /etc/cron.*
+	ss -tulpn
 OTHER:
-	ssh-keygen -t rsa -b 4096
+	ssh-keygen -f <compromised_user>
 	sudo tcpdump -i icmp
 	sudo nc -l -p 4444
+	mysql -u root -p

